@@ -88,21 +88,12 @@ type
 
 var
   Form1: TForm1;
-   num1: String;
-   num2: String;
-   preResult: String;
-   result: String;
-   calView: String;
-   calPreView: String;
-   totalString : String;  //연산과 피연산
-   RFlag:boolean=true;// 최종값이 올 때까지
-   OFlag:boolean=true;// 처음입력값이 불명예감시될 예정일
-
-   oper : Char;
-   flag : boolean=true; //피연산자2 값이 있는지 없는지 저장 flag
-  //operFlag : Boolean = True;     //연산자 기호 있는지 체크
+  keycheck : Boolean = true ;    //키이벤트 중복
   //DoubleEqual: Boolean = False;  //'=' 을 다시 클릭했을 때
-  //keycheck : Boolean = true ;    //키이벤트 중복
+   num1,num2,preResult,result,calView : String;
+   oper : Char;
+  // operFlag : Boolean = True;     //연산자 기호 있는지 체크
+
 
 implementation
 
@@ -245,15 +236,10 @@ begin
   num1 := txtResult.Text;
   oper := '+';
 
-  //calPreView :=  txtResult.Text + oper;
-  //calView.Text := calPreView+ num1;
-   calView.Text := txtResult.Text + oper;
-   txtResult.Text := '';
+  calView.Text := txtResult.Text +  oper;
+  txtResult.Text := '';
 
-   //totalString := totalString + concat(FloatToStr(num2), '+'));
-   //calView.Text := totalString;
-
-   txtResult.SetFocus;
+  txtResult.SetFocus;
   txtResult.SelStart := Length(txtResult.Text);
 end;
 
@@ -299,12 +285,12 @@ begin
     }
 
   if oper =  '+' then
-   result := FloatToStr(StrToFloat(num1) + StrToFloat(num2)) ;
+   result := FloatToStr(StrToFloat(num1)+ StrToFloat(num2)) ;
    txtResult.Text := result;
    
 
    if oper = '-' then
-   result := FloatToStr(StrToFloat(num1) - StrToFloat(num2));
+   result := FloatToStr(StrToFloat(num1)- StrToFloat(num2));
    txtResult.Text := result;
 
 
@@ -313,7 +299,7 @@ begin
    txtResult.Text := result;
 
    if oper = '/' then
-   result := FloatToStr(StrToFloat(num1) /  StrToFloat(num2));
+   result := FloatToStr(StrToFloat(num1)/  StrToFloat(num2));
    txtResult.Text := result;
 
 
