@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, Menus;
+  Dialogs, StdCtrls, ExtCtrls, Menus, OleServer, AccessXP;
 
 type
   TForm1 = class(TForm)
@@ -43,6 +43,7 @@ type
     N2: TMenuItem;
     N3: TMenuItem;
     calView: TEdit;
+    AccessApplication1: TAccessApplication;
     procedure btn0Click(Sender: TObject);
     procedure btn1Click(Sender: TObject);
     procedure btn3Click(Sender: TObject);
@@ -88,9 +89,8 @@ type
 
 var
   Form1: TForm1;
-   num1: String;
-   num2: String;
    preResult: String;
+   recentNumber : String = '0';
    result: String;
    calView: String;
    calPreView: String;
@@ -98,6 +98,9 @@ var
    RFlag:boolean=true;// 최종값이 올 때까지
    OFlag:boolean=true;// 처음입력값이 불명예감시될 예정일
 
+   isFirstText : boolean=true;
+   isOper : boolean=false;
+   isDoubleOper : boolean=false;
    oper : Char;
    flag : boolean=true; //피연산자2 값이 있는지 없는지 저장 flag
   //operFlag : Boolean = True;     //연산자 기호 있는지 체크
@@ -109,125 +112,225 @@ implementation
 {$R *.dfm}
 
 procedure TForm1.btn0Click(Sender: TObject);
-begin
-
+begin        
+ isDoubleOper := false;
+   if isFirstText then
+ begin
+   txtResult.Text := '0';
+   isFirstText := false;
+ end
+ else
+ begin
   if txtResult.text= '0' then
-  txtResult.Text := '0'
+    txtResult.Text := '0'
   else
-  txtResult.Text := txtResult.Text + '0' ;
-
-  txtResult.SetFocus;
-  txtResult.SelStart := Length(txtResult.Text);
-
+    txtResult.Text := txtResult.Text + '0';
+ end;
+ if isOper then
+ recentNumber := txtResult.Text
+ else;
+ txtResult.SetFocus;
+ txtResult.SelStart := Length(txtResult.Text);
 
 end;
 
 procedure TForm1.btn1Click(Sender: TObject);
-begin
+begin 
+ isDoubleOper := false;
+  if isFirstText then
+ begin
+   txtResult.Text := '1';
+   isFirstText := false;
+ end
+ else
+ begin
   if txtResult.text= '0' then
-  txtResult.Text := '1'
+    txtResult.Text := '1'
   else
-  txtResult.Text := txtResult.Text + '1' ;
-
-
-  txtResult.SetFocus;
-  txtResult.SelStart := Length(txtResult.Text);
-
+    txtResult.Text := txtResult.Text + '1';
+ end;
+ if isOper then
+ recentNumber := txtResult.Text
+ else;
+ txtResult.SetFocus;
+ txtResult.SelStart := Length(txtResult.Text);
 end;
 
 procedure TForm1.btn2Click(Sender: TObject);
-begin
+begin       
+ isDoubleOper := false;
+  if isFirstText then
+ begin
+   txtResult.Text := '2';
+   isFirstText := false;
+ end
+ else
+ begin
   if txtResult.text= '0' then
-  txtResult.Text := '2'
+    txtResult.Text := '2'
   else
-  txtResult.Text := txtResult.Text + '2' ;
-
-  txtResult.SetFocus;
-  txtResult.SelStart := Length(txtResult.Text);
+    txtResult.Text := txtResult.Text + '2';
+ end;
+ if isOper then
+ recentNumber := txtResult.Text
+ else;
+ txtResult.SetFocus;
+ txtResult.SelStart := Length(txtResult.Text);
 
 end;
-
 
 procedure TForm1.btn3Click(Sender: TObject);
-begin
-   if txtResult.text= '0' then
-  txtResult.Text := '3'
+begin   
+ isDoubleOper := false;
+   if isFirstText then
+ begin
+   txtResult.Text := '3';
+   isFirstText := false;
+ end
+ else
+ begin
+  if txtResult.text= '0' then
+    txtResult.Text := '3'
   else
-  txtResult.Text := txtResult.Text + '3' ;
-
-  txtResult.SetFocus;
-  txtResult.SelStart := Length(txtResult.Text);
+    txtResult.Text := txtResult.Text + '3';
+ end;
+ if isOper then
+ recentNumber := txtResult.Text
+ else;
+ txtResult.SetFocus;
+ txtResult.SelStart := Length(txtResult.Text);
 
 end;
-
-
 
 procedure TForm1.btn4Click(Sender: TObject);
-begin
-   if txtResult.text= '0' then
-  txtResult.Text := '4'
+begin       
+ isDoubleOper := false;
+  if isFirstText then
+ begin
+   txtResult.Text := '4';
+   isFirstText := false;
+ end
+ else
+ begin
+  if txtResult.text= '0' then
+    txtResult.Text := '4'
   else
-  txtResult.Text := txtResult.Text + '4' ;
-
-  txtResult.SetFocus;
-  txtResult.SelStart := Length(txtResult.Text);
+    txtResult.Text := txtResult.Text + '4';
+ end;
+ if isOper then
+ recentNumber := txtResult.Text
+ else;
+ txtResult.SetFocus;
+ txtResult.SelStart := Length(txtResult.Text);
 end;
-
 procedure TForm1.btn5Click(Sender: TObject);
-begin
-    if txtResult.text= '0' then
-  txtResult.Text := '5'
+begin         
+ isDoubleOper := false;
+  if isFirstText then
+ begin
+   txtResult.Text := '5';
+   isFirstText := false;
+ end
+ else
+ begin
+  if txtResult.text= '0' then
+    txtResult.Text := '5'
   else
-  txtResult.Text := txtResult.Text + '5' ;
-
-  txtResult.SetFocus;
-  txtResult.SelStart := Length(txtResult.Text);
+    txtResult.Text := txtResult.Text + '5';
+ end;
+ if isOper then
+ recentNumber := txtResult.Text
+ else;
+ txtResult.SetFocus;
+ txtResult.SelStart := Length(txtResult.Text);
 end;
 
 procedure TForm1.btn6Click(Sender: TObject);
 begin
-    if txtResult.text= '0' then
-  txtResult.Text := '6'
+ if isFirstText then
+ begin
+   txtResult.Text := '6';
+   isFirstText := false;
+ end
+ else
+ begin
+  if txtResult.text= '0' then
+    txtResult.Text := '6'
   else
-  txtResult.Text := txtResult.Text + '6' ;
-
-  txtResult.SetFocus;
-  txtResult.SelStart := Length(txtResult.Text);
+    txtResult.Text := txtResult.Text + '6';
+ end;
+ isDoubleOper := false;
+ if isOper then
+ recentNumber := txtResult.Text
+ else;
+ txtResult.SetFocus;
+ txtResult.SelStart := Length(txtResult.Text);
 end;
 
 procedure TForm1.btn7Click(Sender: TObject);
-begin
-    if txtResult.text= '0' then
-  txtResult.Text := '7'
+begin 
+ isDoubleOper := false;
+  if isFirstText then
+ begin
+   txtResult.Text := '7';
+   isFirstText := false;
+ end
+ else
+ begin
+  if txtResult.text= '0' then
+    txtResult.Text := '7'
   else
-  txtResult.Text := txtResult.Text + '7' ;
-
-  txtResult.SetFocus;
-  txtResult.SelStart := Length(txtResult.Text);
+    txtResult.Text := txtResult.Text + '7';
+ end;
+ if isOper then
+ recentNumber := txtResult.Text
+ else;
+ txtResult.SetFocus;
+ txtResult.SelStart := Length(txtResult.Text);
 end;
 
 procedure TForm1.btn8Click(Sender: TObject);
-begin
- if txtResult.text= '0' then
-  txtResult.Text := '8'
+begin        
+ isDoubleOper := false;
+ if isFirstText then
+ begin
+   txtResult.Text := '8';
+   isFirstText := false;
+ end
+ else
+ begin
+  if txtResult.text= '0' then
+    txtResult.Text := '8'
   else
-  txtResult.Text := txtResult.Text + '8';
-
-  txtResult.SetFocus;
-  txtResult.SelStart := Length(txtResult.Text);
-  end;
-
-
+    txtResult.Text := txtResult.Text + '8';
+ end;
+ if isOper then
+ recentNumber := txtResult.Text
+ else;
+ txtResult.SetFocus;
+ txtResult.SelStart := Length(txtResult.Text);
+end;
 
 procedure TForm1.btn9Click(Sender: TObject);
-begin
- if txtResult.text= '0' then
-  txtResult.Text := '9'
+begin    
+ isDoubleOper := false;
+  if isFirstText then
+ begin
+   txtResult.Text := '9';
+   isFirstText := false;
+ end
+ else
+ begin
+  if txtResult.text= '0' then
+    txtResult.Text := '9'
   else
-  txtResult.Text := txtResult.Text + '9' ;
-
-  txtResult.SetFocus;
-  txtResult.SelStart := Length(txtResult.Text);
+    txtResult.Text := txtResult.Text + '9';
+ end;
+ if isOper then
+ recentNumber := txtResult.Text
+ else;
+ txtResult.SetFocus;
+ txtResult.SelStart := Length(txtResult.Text);
 end;
 
 procedure TForm1.btnPlusMinusClick(Sender: TObject);
@@ -242,85 +345,252 @@ end;
 
 procedure TForm1.btnPlusClick(Sender: TObject);
 begin
-  num1 := txtResult.Text;
+  if isDoubleOper then
+  begin
   oper := '+';
+  calView.Text := txtResult.Text + oper ;
+  end
+  else
+  begin
+   isDoubleOper := True;
+   isFirstText := true;
+   if isOper then
+    begin
+      if oper =  '+' then
+      begin
+        result := FloatToStr(StrToFloat(recentNumber) + StrToFloat(preResult)) ;
+        calView.Text := result + '+';
+      end;
 
-  //calPreView :=  txtResult.Text + oper;
-  //calView.Text := calPreView+ num1;
-   calView.Text := txtResult.Text + oper;
-   txtResult.Text := '';
+      if oper = '-' then
+      begin
+        result := FloatToStr(StrToFloat(preResult) - StrToFloat(recentNumber));
+        calView.Text := result + '+';
+      end;
 
-   //totalString := totalString + concat(FloatToStr(num2), '+'));
-   //calView.Text := totalString;
+      if oper = '*' then
+      begin
+        result := FloatToStr(StrToFloat(recentNumber) * StrToFloat(preResult));
+        calView.Text := result + '+';
+      end;
+
+      if oper = '/' then
+      begin
+        result := FloatToStr(StrToFloat(preResult) / StrToFloat(recentNumber));
+        calView.Text := result + '+';
+      end;
+      oper := '+';
+      preResult := result;
+      txtResult.Text := result;
+    end
+   else
+    begin
+      oper := '+';
+      isOper := true;
+      preResult := txtResult.Text;
+      calView.Text := txtResult.Text + oper;
+    end;
+
 
    txtResult.SetFocus;
-  txtResult.SelStart := Length(txtResult.Text);
+   txtResult.SelStart := Length(txtResult.Text);
+  end;
 end;
 
 procedure TForm1.btnSubClick(Sender: TObject);
 begin
-  num1 := txtResult.Text;
+  if isDoubleOper then
+  begin
   oper := '-';
-  txtResult.Text := '';
-  txtResult.SetFocus;
-  txtResult.SelStart := Length(txtResult.Text);
+  calView.Text := txtResult.Text + oper ;
+  end
+  else
+  begin
+   isDoubleOper := True;
+   isFirstText := true;
+   if isOper then
+    begin
+      if oper =  '+' then
+      begin
+        result := FloatToStr(StrToFloat(recentNumber) + StrToFloat(preResult)) ;
+        calView.Text := result + '-';
+      end;
+
+      if oper = '-' then
+      begin
+        result := FloatToStr(StrToFloat(preResult) - StrToFloat(recentNumber));
+        calView.Text := result + '-';
+      end;
+
+      if oper = '*' then
+      begin
+        result := FloatToStr(StrToFloat(recentNumber) * StrToFloat(preResult));
+        calView.Text := result + '-';
+      end;
+
+      if oper = '/' then
+      begin
+        result := FloatToStr(StrToFloat(preResult) / StrToFloat(recentNumber));
+        calView.Text := result + '-';
+      end;
+      oper := '-';
+      preResult := result;
+      txtResult.Text := result;
+    end
+   else
+    begin
+      oper := '-';
+      isOper := true;
+      preResult := txtResult.Text;
+      calView.Text := txtResult.Text + oper;
+    end;
+
+
+   txtResult.SetFocus;
+   txtResult.SelStart := Length(txtResult.Text);
+  end;
 end;
 
 
-procedure TForm1.btnDivClick(Sender: TObject);            
+procedure TForm1.btnDivClick(Sender: TObject);
 begin
-  num1 := txtResult.Text;
-  oper := '/';
-  txtResult.Text := '';
-  txtResult.SetFocus;
-  txtResult.SelStart := Length(txtResult.Text);
+  if isDoubleOper then
+    begin
+      oper := '/';
+      calView.Text := txtResult.Text + oper;
+    end
+  else
+  begin
+   isDoubleOper := True;
+   isFirstText := true;
+   if isOper then
+    begin
+      if oper =  '+' then
+      begin
+        result := FloatToStr(StrToFloat(recentNumber) + StrToFloat(preResult)) ;
+        calView.Text := result + '/';
+      end;
+
+      if oper = '-' then
+      begin
+        result := FloatToStr(StrToFloat(preResult) - StrToFloat(recentNumber));
+        calView.Text := result + '/';
+      end;
+
+      if oper = '*' then
+      begin
+        result := FloatToStr(StrToFloat(recentNumber) * StrToFloat(preResult));
+        calView.Text := result + '/';
+      end;
+
+      if oper = '/' then
+      begin
+        result := FloatToStr(StrToFloat(preResult) / StrToFloat(recentNumber));
+        calView.Text := result + '/';
+      end;
+      oper := '/';
+      preResult := result;
+      txtResult.Text := result;
+    end
+   else
+    begin
+      oper := '/';
+      isOper := true;
+      preResult := txtResult.Text;
+      calView.Text := txtResult.Text + oper;
+    end;
+
+
+   txtResult.SetFocus;
+   txtResult.SelStart := Length(txtResult.Text);
+  end;
 end;
 
 procedure TForm1.btnMulClick(Sender: TObject);
 begin
-  num1 := txtResult.Text;
-  oper := '*';
-  txtResult.Text := '';
-  txtResult.SetFocus;
-  txtResult.SelStart := Length(txtResult.Text);
+  if isDoubleOper then
+    begin
+      oper := '*';
+      calView.Text := txtResult.Text + oper;
+    end
+  else
+  begin
+   isDoubleOper := True;
+   isFirstText := true;
+   if isOper then
+    begin
+      if oper =  '+' then
+      begin
+        result := FloatToStr(StrToFloat(recentNumber) + StrToFloat(preResult)) ;
+        calView.Text := result + '*';
+      end;
+
+      if oper = '-' then
+      begin
+        result := FloatToStr(StrToFloat(preResult) - StrToFloat(recentNumber));
+        calView.Text := result + '*';
+      end;
+
+      if oper = '*' then
+      begin
+        result := FloatToStr(StrToFloat(recentNumber) * StrToFloat(preResult));
+        calView.Text := result + '*';
+      end;
+
+      if oper = '/' then
+      begin
+        result := FloatToStr(StrToFloat(preResult) / StrToFloat(recentNumber));
+        calView.Text := result + '*';
+      end;
+      oper := '*';
+      preResult := result;
+      txtResult.Text := result;
+    end
+   else
+    begin
+      oper := '*';
+      isOper := true;
+      preResult := txtResult.Text;
+      calView.Text := txtResult.Text + oper;
+    end;
+
+
+   txtResult.SetFocus;
+   txtResult.SelStart := Length(txtResult.Text);
+  end;
 end;
 
 
 procedure TForm1.btnEqualClick(Sender: TObject);
 begin
-   num2 := txtResult.Text;
-   calView.Text := '';
-   {
-  if oper =  '+' then
-   preResult := num1 + num2;
-   num1 := preResult;
-   result := FloatToStr(StrToFloat(num1) + StrToFloat(num2));
-   txtResult.Text := result;
-    }
-
-  if oper =  '+' then
-   result := FloatToStr(StrToFloat(num1) + StrToFloat(num2)) ;
-   txtResult.Text := result;
-   
+   if oper =  '+' then
+   begin
+      result := FloatToStr(StrToFloat(recentNumber) + StrToFloat(preResult)) ;
+      calView.Text := preResult + oper + recentNumber + '=' + result;
+   end;
 
    if oper = '-' then
-   result := FloatToStr(StrToFloat(num1) - StrToFloat(num2));
-   txtResult.Text := result;
-
+   begin
+      result := FloatToStr(StrToFloat(recentNumber) - StrToFloat(preResult));
+      calView.Text := preResult + oper + recentNumber + '=' + result;
+   end;
 
    if oper = '*' then
-   result := FloatToStr(StrToFloat(num1) * StrToFloat(num2));
-   txtResult.Text := result;
+   begin
+      result := FloatToStr(StrToFloat(recentNumber) * StrToFloat(preResult));
+      calView.Text := preResult + oper + recentNumber + '=' + result;
+   end;
 
    if oper = '/' then
-   result := FloatToStr(StrToFloat(num1) /  StrToFloat(num2));
+   begin
+      result := FloatToStr(StrToFloat(recentNumber) /  StrToFloat(preResult));
+      calView.Text := preResult + oper + recentNumber + '=' + result;
+   end;
    txtResult.Text := result;
-
+   preResult := result;
 
   txtResult.SetFocus;
   txtResult.SelStart := Length(txtResult.Text);
-
-
 
 end;
 
