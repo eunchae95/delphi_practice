@@ -7,7 +7,7 @@ uses
   Dialogs, StdCtrls, ExtCtrls, Menus;
 
 type
-  TForm1 = class(TForm)
+    TForm1 = class(TForm)
     panel1: TPanel;
     txtResult: TEdit;
     btnMC: TButton;
@@ -62,17 +62,14 @@ type
     procedure btnBSClick(Sender: TObject);
     procedure btnCEClick(Sender: TObject);
     procedure btnDotClick(Sender: TObject);
-    //procedure FormKeyPress(Sender: TObject; var Key: Char);
-    //procedure btnEqualKeyPress(Sender: TObject; var Key: Char);
-   // procedure btnEqualKeyDown(Sender: TObject; var Key: Char; Shift: TShiftState);
-   // procedure btnEqualKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    //procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    //procedure btnEqualKeyUp(Sender: TObject; var Key: Word;Shift: TShiftState);
-    //procedure txtResultKeyDown(Sender: TObject; var Key: Char);
-    //procedure txtResultKeypress(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure txtResultKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-//    procedure txtResultKeyPress(Sender: TObject; var Key: Char);
+//  procedure txtResultKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnCClick(Sender: TObject);
+//  procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure txtResultKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure txtResultKeyPress(Sender: TObject; var Key: Char);
+    procedure FormCreate(Sender: TObject);
+//  procedure btnModClick(Sender: TObject);
+//  procedure txtResultKeyPress(Sender: TObject; var Key: Char);
 
 
   private
@@ -84,22 +81,22 @@ type
     { Public declarations }
 
 
-  end;
+ end;
 
 var
-   Form1: TForm1;
-   preResult: String;           // 새로운 연산전에 저장된 결과값
-   recentNumber : String = '0'; //최근 입력된 숫자
-   result: String;              //최종 계산 결과값
-   calView: String;             //계산식 보여주는 창
-   calPreView: String;
-   isFirstText : boolean=true;  //첫번째 숫자
-   isOper : boolean=false;      //연산자가 있는지 확인
-   isDoubleOper : boolean=false;  //연산자 두번 연속 눌렀나 확인
+   Form1 : TForm1;
+   preResult : String;                // 새로운 연산전에 저장된 결과값
+   recentNumber : String = '0';       //최근 입력된 숫자
+   result : String;                   //최종 계산 결과값
+   calView : String;                  //계산식 보여주는 창
+   calPreView : String;
+   isFirstText : boolean = true;
+   isOper : boolean = false;            //연산자가 있는지 확인
+   isDoubleOper : boolean = false;      //연산자 두번 연속 눌렀나 확인
    oper : Char;
-   remainResult : String ; // CE 전에 결과값 저장
-   isSave : Boolean = False; // 초기화 전에 계산값이 담겼는지
-
+   remainResult : String ;            // CE 전에 결과값 저장
+   isSave : Boolean = False;          // 초기화 전에 계산값이 담겼는지
+   keycheck : boolean = true;         //키이벤트 중복
 
 
 
@@ -108,63 +105,62 @@ implementation
 {$R *.dfm}
 
 procedure TForm1.btn0Click(Sender: TObject);
-begin
- isDoubleOper := false;
+  begin
+    isDoubleOper := false;
 
-   if isFirstText then
- begin
-   txtResult.Text := '0';
-   isFirstText := false;
- end
- else
- begin
-  if txtResult.text= '0' then
-    txtResult.Text := '0'
-  else
-    txtResult.Text := txtResult.Text + '0';
- end;
+    if isFirstText then
+      begin
+      txtResult.Text := '0';
+      isFirstText := false;
+      end
+    else
+      begin
+      if txtResult.text= '0' then
+         txtResult.Text := '0'
+      else
+         txtResult.Text := txtResult.Text + '0';
+      end;
 
- if isOper then
- recentNumber := txtResult.Text
- else;
- txtResult.SetFocus;
- txtResult.SelStart := Length(txtResult.Text);
+    if isOper then
+        recentNumber := txtResult.Text;
+
+    txtResult.SetFocus;
+    txtResult.SelStart := Length(txtResult.Text);
 
 end;
+
 
 procedure TForm1.btn1Click(Sender: TObject);
-begin
-  //ShowMessage('22');
- isDoubleOper := false;
-
-  if isFirstText then
- begin
-   txtResult.Text := '1';
-   isFirstText := false;
- end
- else
- begin
-  if (txtResult.text= '0') then
-    txtResult.Text := '1'
-  else
-    txtResult.Text := txtResult.Text + '1';
- end;
-
-  if isOper then
   begin
-    recentNumber := txtResult.Text;
-  end
-  else
-  begin
-  end;
-  ;
+    isDoubleOper := false;
 
- txtResult.SetFocus;
- txtResult.SelStart := Length(txtResult.Text);
+   if isFirstText then
+    begin
+      txtResult.Text := '1';
+      //txtResult.Text := txtResult.Text + (Sender as TButton).Caption; // 캡션 값 넣기
+
+      isFirstText := false;
+    end
+  else
+    begin
+    if txtResult.text= '0' then
+       txtResult.Text := '1'
+    else
+       txtResult.Text := txtResult.Text + '1';
+    end;
+    if isOper then
+      recentNumber := txtResult.Text ;
+
+
+  //txtResult.SetFocus;
+    txtResult.SelStart := Length(txtResult.Text);
+
+
 end;
 
+
 procedure TForm1.btn2Click(Sender: TObject);
-begin       
+begin
  isDoubleOper := false;
   if isFirstText then
  begin
@@ -174,20 +170,21 @@ begin
  else
  begin
   if txtResult.text= '0' then
-    txtResult.Text := '2'
+   txtResult.Text := '2'
   else
     txtResult.Text := txtResult.Text + '2';
  end;
  if isOper then
- recentNumber := txtResult.Text
- else;
- txtResult.SetFocus;
+ recentNumber := txtResult.Text;
+
+ //txtResult.SetFocus;
  txtResult.SelStart := Length(txtResult.Text);
+
 
 end;
 
 procedure TForm1.btn3Click(Sender: TObject);
-begin   
+begin
  isDoubleOper := false;
    if isFirstText then
  begin
@@ -204,8 +201,10 @@ begin
  if isOper then
  recentNumber := txtResult.Text
  else;
+
  txtResult.SetFocus;
  txtResult.SelStart := Length(txtResult.Text);
+
 
 end;
 
@@ -227,9 +226,11 @@ begin
  if isOper then
  recentNumber := txtResult.Text
  else;
+
  txtResult.SetFocus;
  txtResult.SelStart := Length(txtResult.Text);
 end;
+
 procedure TForm1.btn5Click(Sender: TObject);
 begin         
  isDoubleOper := false;
@@ -248,6 +249,7 @@ begin
  if isOper then
  recentNumber := txtResult.Text
  else;
+
  txtResult.SetFocus;
  txtResult.SelStart := Length(txtResult.Text);
 end;
@@ -256,7 +258,7 @@ procedure TForm1.btn6Click(Sender: TObject);
 begin
  if isFirstText then
  begin
-   txtResult.Text := '6';
+  txtResult.Text := '6';
    isFirstText := false;
  end
  else
@@ -270,6 +272,7 @@ begin
  if isOper then
  recentNumber := txtResult.Text
  else;
+
  txtResult.SetFocus;
  txtResult.SelStart := Length(txtResult.Text);
 end;
@@ -279,7 +282,7 @@ begin
  isDoubleOper := false;
   if isFirstText then
  begin
-   txtResult.Text := '7';
+  txtResult.Text := '7';
    isFirstText := false;
  end
  else
@@ -292,6 +295,7 @@ begin
  if isOper then
  recentNumber := txtResult.Text
  else;
+
  txtResult.SetFocus;
  txtResult.SelStart := Length(txtResult.Text);
 end;
@@ -348,17 +352,22 @@ begin
   pMinus := StrToFloat(txtResult.Text);
   txtResult.Text := FloatToStr(-1 * pMinus);
 
+ txtResult.SetFocus;
+ txtResult.SelStart := Length(txtResult.Text);
+
 end;
 
 procedure TForm1.btnPlusClick(Sender: TObject);
 begin
   if isDoubleOper then
   begin
+    //ShowMessage('ggg');
   oper := '+';
   calView.Text := txtResult.Text + oper ;
   end
   else
   begin
+    //ShowMessage('hh');
    //ShowMessage('recentNumber: ' + recentNumber + 'preResult:' + preResult);
    isDoubleOper := True;
    isFirstText := true;
@@ -366,8 +375,12 @@ begin
     begin
       if oper =  '+' then
       begin
+        //ShowMessage('2222222');
         result := FloatToStr(StrToFloat(recentNumber) + StrToFloat(preResult)) ;
+        //ShowMessage('22222');
         calView.Text := result + '+';
+
+       // ShowMessage(calView.Text);
       end;
 
       if oper = '-' then
@@ -387,12 +400,14 @@ begin
         result := FloatToStr(StrToFloat(preResult) / StrToFloat(recentNumber));
         calView.Text := result + '+';
       end;
+
       oper := '+';
       preResult := result;
       txtResult.Text := result;
     end
    else
     begin
+     // ShowMessage('33333');
       oper := '+';
       isOper := true;
       preResult := txtResult.Text;
@@ -402,7 +417,6 @@ begin
     if isSave = True then                        //초기화전에 저장됐는지
     begin
       calView.Text := remainResult + oper;
-
     end ;
 
 
@@ -447,6 +461,7 @@ begin
         result := FloatToStr(StrToFloat(preResult) / StrToFloat(recentNumber));
         calView.Text := result + '-';
       end;
+
       oper := '-';
       preResult := result;
       txtResult.Text := result;
@@ -470,6 +485,8 @@ begin
    txtResult.SelStart := Length(txtResult.Text);
   end;
 end;
+
+
 
 
 procedure TForm1.btnDivClick(Sender: TObject);
@@ -593,6 +610,7 @@ begin
 end;
 
 
+
 procedure TForm1.btnEqualClick(Sender: TObject);
 begin
    isOper := false;     // 이걸 처리하지않으면,  5+3=8 다음에 11+?= ? 이런식으로 잘못 누적된 결과값이 입력값으로 된다
@@ -710,7 +728,7 @@ begin
    //recentNumber := '0';
    remainResult := result;
 
-//ShowMessage(txtResult.Text);
+    //ShowMessage(txtResult.Text);
 
     //alView.Text := result;
    // txtResult.Text := recentNumber;
@@ -720,7 +738,7 @@ begin
     //txtResult.Text := result;
 
     txtResult.SetFocus;
-   txtResult.SelStart := Length(txtResult.Text);
+    txtResult.SelStart := Length(txtResult.Text);
 
 end;
 
@@ -729,7 +747,7 @@ procedure TForm1.btnCClick(Sender: TObject);
 begin
   txtResult.Text := '0';
   calView.Text := '';
-  result := '0';
+ // result := '0';
 //  preResult := '0';
 //  recentNumber := '0';
   remainResult  := '0';
@@ -750,11 +768,156 @@ begin
 end;
 
 
+{
 procedure TForm1.txtResultKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
- if isOper then
- recentNumber := txtResult.Text
- else;
+    if Key =  VK_NUMPAD0  then
+  begin
+    //ShowMessage('0');
+    btn0Click(Sender);
+  end
+  else if Key =  VK_NUMPAD1  then
+  begin
+    //ShowMessage('1');
+    btn1.Click;
+    //btn1Click(Sender);
+
+  end
+  else if Key =  VK_NUMPAD2  then
+  begin
+    //ShowMessage('2');
+    btn1Click(Sender);
+  end
+  else if Key =  VK_ADD  then
+  begin
+    //ShowMessage('+');
+    btnPlus.Click;
+    //btnPlusClick(Sender);
+  end
+  else if Key =  VK_RETURN  then
+  begin
+
+    btnEqualClick(Sender);
+  end
+  else if Key = VK_SUBTRACT then
+  begin
+    ShowMessage('-');
+    btnSubClick(Sender); //빼기
+  end;
+
+end;
+}
+
+ {
+procedure TForm1.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    case Key of
+          VK_NUMPAD0 : if(keycheck = false) then
+            begin  //keycheck로 down과 press안겹치게 플래그
+              btn0.Click;
+            end;
+          VK_NUMPAD1 : if(keycheck = false) then
+            begin
+              btn1.Click;
+            end;
+          VK_RETURN : if(keycheck = false) then
+            begin
+              btnEqual.Click;
+            end;
+    else
+    end;
+    keycheck := True;
+end;
+}
+
+
+procedure TForm1.txtResultKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+
+  //ShowMessage('txtResultKeyDown');
+  if Key = VK_RETURN then
+  begin
+
+    btnEqualClick(Sender);
+    ShowMessage('enter');
+    txtResult.SetFocus;
+    txtResult.SelStart := Length(txtResult.Text);
+    //ShowMessage('277777');
+
+     //btnEqual.Click;
+
+  end
+
+end;
+
+
+
+procedure TForm1.txtResultKeyPress(Sender: TObject; var Key: Char);
+begin
+   if Key = '0' then btn0Click(Sender)
+  else if Key = '1' then begin
+    btn1Click(Sender);
+    txtResult.Text := Copy(txtResult.Text,2,1);
+    end
+  else if Key = '2' then begin
+   btn2Click(Sender);
+   txtResult.Text := Copy(txtResult.Text,2,1);
+   end
+  else if Key = '3' then begin
+   btn3Click(Sender);
+   txtResult.Text := Copy(txtResult.Text,2,1);
+   end
+  else if Key = '4' then begin
+   btn4Click(Sender);
+   txtResult.Text := Copy(txtResult.Text,2,1);
+   end
+  else if Key = '5' then begin
+   btn5Click(Sender);
+   txtResult.Text := Copy(txtResult.Text,2,1);
+   end
+  else if Key = '6' then begin
+   btn6Click(Sender);
+   txtResult.Text := Copy(txtResult.Text,2,1);
+   end
+  else if Key = '7' then begin
+   btn7Click(Sender);
+   txtResult.Text := Copy(txtResult.Text,2,1);
+   end
+  else if Key = '8' then begin
+   btn8Click(Sender);
+   txtResult.Text := Copy(txtResult.Text,2,1);
+   end
+  else if Key = '9' then begin
+   btn9Click(Sender);
+   txtResult.Text := Copy(txtResult.Text,2,1);
+   end
+  else if Key = '+' then btnPlusClick(Sender)
+  else if Key = '-' then btnSubClick(Sender)
+  else if Key = '*' then btnMulClick(Sender)
+  else if Key = '/' then btnDivClick(Sender)
+ // else if Key = #27 then btnClearClick(Sender)      // ESC
+  else if Key = #13 then btnEqualClick(Sender)      // Enter
+  else if Key = '.' then btnDotClick(Sender)
+  else if Key = #8 then btnBSClick(Sender);  // BackSpace
+    Form1.SetFocusedControl(btnEqual);
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  txtResult.Clear;
+end;
+
+
+
+end.
+
+
+
+
+ {
+procedure TForm1.txtResultKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
 
   //ShowMessage('txtResultKeyDown');
   if Key = VK_RETURN then
@@ -773,23 +936,7 @@ begin
     //txtResult.SelStart := Length(txtResult.Text);
       btnPlusClick(Sender);
       txtResult.Text := '';
-
-
-
-   // isDoubleOper := True;
-   //isFirstText := true;
-    {
-    if isOper then
-    begin
-
-    txtResult.SetFocus;
-    txtResult.SelStart := Length(txtResult.Text);
-    btnPlusClick(Sender);
-    }
-    //txtResult.Text := recentNumber;
     end
-
-
 
   else if Key = VK_NUMPAD0 then
   begin
@@ -867,7 +1014,11 @@ begin
 
 end;
 
+}
 
+
+ 
+{
 procedure TForm1.txtResultKeyPress(Sender: TObject; var Key: Char);
 //edit창에 '숫자, .',enter 만 입력되게 ( 나중에 연산자도 되도록 )
 begin
@@ -888,10 +1039,9 @@ begin
   end;
 end;
 
+  }
 
 
-
-end.
 
 
 {
@@ -976,27 +1126,11 @@ end;
  }
 
 
+
+
+
+
 {
-procedure TForm1.FormKeyDown(Sender: TObject; var Key: Word;  //키보드 입력
-  Shift: TShiftState);
-begin
-      case Key of
-          VK_NUMPAD0 : if(keycheck = false) then
-            begin  //keycheck로 down과 press안겹치게 플래그
-              btn0.Click;
-            end;
-          VK_NUMPAD1 : if(keycheck = false) then
-            begin
-              btn1.Click;
-            end;
-          VK_RETURN : if(keycheck = false) then
-            begin
-              btnEqual.Click;
-            end;
-      else
-      end;
-    keycheck := True;
-end;
 procedure TForm1.FormKeyPress(Sender: TObject; var Key: Char);
 begin
     if(keycheck = True) then begin
@@ -1006,7 +1140,6 @@ begin
     end;
 end;
 }
-
 {
 procedure TForm1.btnEqualKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
@@ -1014,5 +1147,6 @@ begin
 ShowMessage('26666');
 end;
 }
+
 
 
